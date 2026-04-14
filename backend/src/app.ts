@@ -20,14 +20,30 @@ const allowedOrigins = env.CLIENT_URL.split(",")
   .map((item) => item.trim())
   .filter(Boolean);
 
+function isAllowedOrigin(origin: string) {
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  if (origin.startsWith("http://localhost:")) {
+    return true;
+  }
+
+  if (origin.startsWith("https://") && origin.endsWith(".vercel.app")) {
+    return true;
+  }
+
+  return false;
+}
+
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || isAllowedOrigin(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Bu kaynaktan erişime izin verilmiyor."));
+      return callback(null, false);
     }
   })
 );
