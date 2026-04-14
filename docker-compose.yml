@@ -1,0 +1,58 @@
+services:
+  veritabani:
+    image: postgres:16-alpine
+    container_name: seringym-db
+    environment:
+      POSTGRES_DB: gym_management
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+      - ./database/migration_v2.sql:/docker-entrypoint-initdb.d/03_migration_v2.sql:ro
+      - ./database/migration_v3.sql:/docker-entrypoint-initdb.d/04_migration_v3.sql:ro
+      - ./database/migration_v4.sql:/docker-entrypoint-initdb.d/05_migration_v4.sql:ro
+      - ./database/migration_v5.sql:/docker-entrypoint-initdb.d/06_migration_v5.sql:ro
+      - ./database/migration_v6.sql:/docker-entrypoint-initdb.d/07_migration_v6.sql:ro
+      - ./database/migration_v7.sql:/docker-entrypoint-initdb.d/08_migration_v7.sql:ro
+      - ./database/migration_v8.sql:/docker-entrypoint-initdb.d/09_migration_v8.sql:ro
+      - ./database/migration_v9.sql:/docker-entrypoint-initdb.d/10_migration_v9.sql:ro
+      - ./database/migration_v10.sql:/docker-entrypoint-initdb.d/11_migration_v10.sql:ro
+      - ./database/migration_v11.sql:/docker-entrypoint-initdb.d/12_migration_v11.sql:ro
+      - ./database/migration_v12.sql:/docker-entrypoint-initdb.d/13_migration_v12.sql:ro
+      - ./database/migration_v13.sql:/docker-entrypoint-initdb.d/14_migration_v13.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d gym_management"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: seringym-backend
+    environment:
+      PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@veritabani:5432/gym_management
+      JWT_SECRET: super-secret-key
+      CLIENT_URL: http://localhost:8080
+    depends_on:
+      veritabani:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: seringym-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:
