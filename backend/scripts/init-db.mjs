@@ -11,8 +11,18 @@ if (!databaseUrl) {
   process.exit(1);
 }
 
+function createPoolConfig(connectionString) {
+  const isLocalConnection =
+    connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
+
+  return {
+    connectionString,
+    ssl: isLocalConnection ? undefined : { rejectUnauthorized: false }
+  };
+}
+
 const pool = new Pool({
-  connectionString: databaseUrl
+  ...createPoolConfig(databaseUrl)
 });
 
 const localDatabaseDir = path.join(process.cwd(), "database");
