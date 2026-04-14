@@ -1,4 +1,18 @@
-export const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:4000/api";
+function resolveApiUrl() {
+  const envUrl = import.meta.env.VITE_API_URL;
+
+  if (envUrl) {
+    return envUrl;
+  }
+
+  if (typeof window !== "undefined" && window.location.hostname.endsWith("vercel.app")) {
+    return "https://seringym-backend.onrender.com/api";
+  }
+
+  return "http://localhost:4000/api";
+}
+
+export const API_URL = resolveApiUrl();
 
 function getToken() {
   return localStorage.getItem("gympro_token");
@@ -22,7 +36,14 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}) {
     headers
   });
 
-  const payload = await response.json();
+  const rawText = await response.text();
+  let payload: { message?: string } = {};
+
+  try {
+    payload = rawText ? JSON.parse(rawText) : {};
+  } catch {
+    payload = {};
+  }
 
   if (!response.ok) {
     throw new Error(payload.message ?? "Bir hata oluştu.");
