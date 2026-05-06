@@ -672,13 +672,13 @@ label {
 .overview-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
-  gap: 1rem;
+  gap: 0.7rem;
   align-items: start;
 }
 
 .overview-side-stack {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.45rem;
   align-content: start;
   align-self: start;
 }
@@ -726,7 +726,7 @@ label {
 
 .panel-stack {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.45rem;
 }
 
 .payment-form-grid {
@@ -760,24 +760,24 @@ label {
 }
 
 .entry-pass-card img {
-  width: 260px;
-  height: 260px;
+  width: 178px;
+  height: 178px;
   border-radius: 20px;
   background: white;
-  padding: 0.75rem;
+  padding: 0.55rem;
 }
 
 .entry-pass-display {
   display: flex;
-  gap: 1.25rem;
+  gap: 0.85rem;
   align-items: center;
   flex-wrap: wrap;
 }
 
 .entry-pass-meta {
   display: grid;
-  gap: 0.65rem;
-  max-width: 480px;
+  gap: 0.45rem;
+  max-width: 420px;
 }
 
 .entry-status-pill {
@@ -1403,9 +1403,9 @@ td {
 
 .dashboard-card {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   align-content: start;
-  min-height: 220px;
+  min-height: 0;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)),
     var(--paper);
@@ -1422,7 +1422,7 @@ td {
   display: grid;
   gap: 0.85rem;
   align-content: start;
-  min-height: 100%;
+  min-height: 0;
   background:
     radial-gradient(circle at top right, rgba(199, 155, 74, 0.2), transparent 38%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
@@ -1457,10 +1457,39 @@ td {
 }
 
 .mini-stat-card {
-  min-height: 124px;
+  min-height: 110px;
   display: grid;
   gap: 0.65rem;
   align-content: space-between;
+}
+
+.overview-grid--member .dashboard-grid {
+  gap: 0.7rem;
+}
+
+.overview-grid--member .overview-side-stack > .panel-stack {
+  gap: 0;
+}
+
+.overview-grid--member .entry-pass-card {
+  padding: 0.95rem;
+}
+
+.overview-grid--member .entry-pass-card .panel-heading {
+  margin-bottom: 0.25rem;
+}
+
+.overview-grid--member .entry-pass-card .panel-heading p {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+}
+
+.overview-grid--member .entry-pass-card .ghost-button {
+  padding: 0.7rem 0.85rem;
+}
+
+.overview-grid--member .entry-token-box {
+  font-size: 0.86rem;
 }
 
 .form-card > .panel-heading {
