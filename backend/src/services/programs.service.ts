@@ -89,8 +89,13 @@ export async function getProgramsOverview(userId: string, role: "member" | "trai
 
   const membersResult =
     role !== "member"
-      ? await query<{ id: string; full_name: string }>(
-          `SELECT id, full_name FROM users WHERE role = 'member' ORDER BY full_name ASC`
+      ? await query<{ id: string; full_name: string; username: string | null; email: string }>(
+          `
+            SELECT DISTINCT id, full_name, username, email
+            FROM users
+            WHERE role = 'member'
+            ORDER BY full_name ASC, username ASC NULLS LAST, email ASC
+          `
         )
       : { rows: [] as any[] };
 

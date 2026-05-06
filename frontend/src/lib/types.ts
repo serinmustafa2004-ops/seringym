@@ -140,6 +140,8 @@ export type ProgramOverview = {
   assignableMembers: Array<{
     id: string;
     full_name: string;
+    username: string | null;
+    email: string;
   }>;
   programs: Array<{
     id: string;
