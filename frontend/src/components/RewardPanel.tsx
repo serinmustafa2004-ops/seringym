@@ -55,39 +55,51 @@ export function RewardPanel({ data, onRefresh }: Props) {
           <p>Seviye: {seviyeEtiketi(data.wallet.tier_name)}</p>
         </section>
 
-        <section className="badge-grid">
-          {data.badges.map((badge) => (
-            <article className="badge-card" key={badge.name}>
-              <div className="card-title-row">
-                <IconBadge symbol="●" tone="teal" size="sm" />
-                <strong>{cevirMetin(badge.name)}</strong>
-              </div>
-              <p>{cevirMetin(badge.description)}</p>
-            </article>
-          ))}
+        <section className="reward-section reward-section--badges">
+          <div className="card-title-row">
+            <IconBadge symbol="●" tone="teal" size="sm" />
+            <h3>Kazanılan Rozetler</h3>
+          </div>
+          <div className="badge-grid">
+            {data.badges.map((badge) => (
+              <article className="badge-card" key={badge.name}>
+                <div className="card-title-row">
+                  <IconBadge symbol="●" tone="teal" size="sm" />
+                  <strong>{cevirMetin(badge.name)}</strong>
+                </div>
+                <p>{cevirMetin(badge.description)}</p>
+              </article>
+            ))}
+          </div>
         </section>
 
-        <section className="reward-catalog">
-          {data.rewards.map((reward) => (
-            <article className="reward-card" key={reward.id}>
-              <div>
-                <div className="card-title-row">
-                  <IconBadge symbol="◇" tone="coral" size="sm" />
-                  <strong>{cevirMetin(reward.name)}</strong>
+        <section className="reward-section reward-section--catalog">
+          <div className="card-title-row">
+            <IconBadge symbol="◇" tone="coral" size="sm" />
+            <h3>Kullanılabilir Ödüller</h3>
+          </div>
+          <div className="reward-catalog">
+            {data.rewards.map((reward) => (
+              <article className="reward-card" key={reward.id}>
+                <div>
+                  <div className="card-title-row">
+                    <IconBadge symbol="◇" tone="coral" size="sm" />
+                    <strong>{cevirMetin(reward.name)}</strong>
+                  </div>
+                  <p>{cevirMetin(reward.description)}</p>
                 </div>
-                <p>{cevirMetin(reward.description)}</p>
-              </div>
-              <div className="reward-actions">
-                <span>{reward.points_cost} puan</span>
-                <button
-                  disabled={data.wallet.points_balance < reward.points_cost}
-                  onClick={() => redeem(reward.id)}
-                >
-                  Kare Kod ile Kullan
-                </button>
-              </div>
-            </article>
-          ))}
+                <div className="reward-actions">
+                  <span>{reward.points_cost} puan</span>
+                  <button
+                    disabled={data.wallet.points_balance < reward.points_cost}
+                    onClick={() => redeem(reward.id)}
+                  >
+                    Kare Kod ile Kullan
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
       </div>
 
