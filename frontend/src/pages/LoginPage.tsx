@@ -16,27 +16,24 @@ export function LoginPage({ onLogin }: Props) {
   const [phoneLast4, setPhoneLast4] = useState("");
   const [resetMessage, setResetMessage] = useState("");
 
-  const presets: Record<User["role"], { title: string; identifier: string; password: string; badge: string; description: string }> = {
+  const presets: Record<User["role"], { title: string; identifier: string; password: string; badge: string }> = {
     member: {
       title: "Üye Girişi",
       identifier: "uye001",
       password: "SerinUye001!",
-      badge: "Üye Alanı",
-      description: "Salon üyeliğini, derslerini ve ödül avantajlarını tek yerden yönet."
+      badge: "Üye Alanı"
     },
     trainer: {
       title: "Antrenör Girişi",
       identifier: "mert.yildiz",
       password: "SerinAnt01!",
-      badge: "Antrenör Alanı",
-      description: "Üye programlarını, ders takvimini ve kişisel performansını yönet."
+      badge: "Antrenör Alanı"
     },
     admin: {
       title: "Yönetici Girişi",
       identifier: "admin.serin",
       password: "SerinAdm01!",
-      badge: "Yönetim Merkezi",
-      description: "Şube operasyonlarını, gelirleri ve insan trafiğini merkezi olarak izle."
+      badge: "Yönetim Merkezi"
     }
   };
 
@@ -135,7 +132,6 @@ export function LoginPage({ onLogin }: Props) {
 
         <div className="portal-badge">{presets[role].badge}</div>
         <h2>{presets[role].title}</h2>
-        <p className="login-helper">{presets[role].description}</p>
         <form onSubmit={handleSubmit}>
           <label>
             Kullanıcı Adı veya E-posta
