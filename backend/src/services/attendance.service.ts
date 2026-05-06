@@ -28,7 +28,7 @@ export async function getAttendanceOverview(filters: Filters) {
 
   if (filters.member) {
     params.push(`%${filters.member}%`);
-    where.push(`u.full_name ILIKE $${params.length}`);
+    where.push(`(u.full_name ILIKE $${params.length} OR u.username ILIKE $${params.length} OR u.email ILIKE $${params.length})`);
   }
 
   const whereClause = where.length ? `WHERE ${where.join(" AND ")}` : "";

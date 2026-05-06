@@ -19,6 +19,13 @@ export function AttendancePanel() {
   async function load() {
     try {
       setError("");
+
+      if (from && to && from > to) {
+        setError("Başlangıç tarihi, bitiş tarihinden sonra olamaz.");
+        setData(null);
+        return;
+      }
+
       const params = new URLSearchParams();
       if (date) params.set("date", date);
       if (from) params.set("from", from);
@@ -35,6 +42,19 @@ export function AttendancePanel() {
   useEffect(() => {
     void load();
   }, []);
+
+  function clearFilters() {
+    setDate("");
+    setFrom("");
+    setTo("");
+    setMember("");
+    setError("");
+    void apiRequest<AttendanceOverview>("/attendance")
+      .then((result) => setData(result))
+      .catch((loadError) =>
+        setError(loadError instanceof Error ? loadError.message : "Kayıtlar yüklenemedi.")
+      );
+  }
 
   const hourlyMax = maxValue(data?.hourChart ?? []);
   const dailyMax = maxValue(data?.dayChart ?? []);
@@ -53,28 +73,61 @@ export function AttendancePanel() {
         <div className="program-form-grid">
           <label>
             Gün
-            <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+            <input
+              type="date"
+              value={date}
+              onChange={(event) => {
+                const nextDate = event.target.value;
+                setDate(nextDate);
+                if (nextDate) {
+                  setFrom("");
+                  setTo("");
+                }
+              }}
+            />
           </label>
           <label>
             Başlangıç Tarihi
-            <input type="date" value={from} onChange={(event) => setFrom(event.target.value)} />
+            <input
+              type="date"
+              value={from}
+              onChange={(event) => {
+                const nextFrom = event.target.value;
+                setFrom(nextFrom);
+                if (nextFrom) {
+                  setDate("");
+                }
+              }}
+            />
           </label>
           <label>
             Bitiş Tarihi
-            <input type="date" value={to} onChange={(event) => setTo(event.target.value)} />
+            <input
+              type="date"
+              value={to}
+              onChange={(event) => {
+                const nextTo = event.target.value;
+                setTo(nextTo);
+                if (nextTo) {
+                  setDate("");
+                }
+              }}
+            />
           </label>
           <label>
             Üye Ara
-            <input value={member} onChange={(event) => setMember(event.target.value)} placeholder="Örn: Ayşe" />
+            <input
+              value={member}
+              onChange={(event) => setMember(event.target.value)}
+              placeholder="Örn: Ayşe veya uye001"
+            />
           </label>
         </div>
         <div className="action-row">
-          <button className="ghost-button" onClick={() => {
-            setDate("");
-            setFrom("");
-            setTo("");
-            setMember("");
-          }}>
+          <button onClick={() => void load()}>
+            Filtreleri Uygula
+          </button>
+          <button className="ghost-button" onClick={clearFilters}>
             Filtreleri Temizle
           </button>
           <button className="ghost-button" onClick={() => setShowDetails((current) => !current)}>
