@@ -100,7 +100,7 @@ export function ProgramsPanel({ data, user, onRefresh }: Props) {
           </div>
 
           <div className="program-form-grid">
-            <label>
+            <label className="span-2">
               Üye
               <select value={memberId} onChange={(event) => setMemberId(event.target.value)}>
                 {data.assignableMembers.map((member) => (
