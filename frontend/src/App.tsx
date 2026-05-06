@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
 import type { User } from "./lib/types";
+import { INVALID_AUTH_EVENT } from "./lib/api";
 
 type AuthState = {
   token: string;
@@ -18,6 +19,15 @@ export default function App() {
     if (token && userRaw) {
       setAuth({ token, user: JSON.parse(userRaw) as User });
     }
+
+    function handleInvalidAuth() {
+      setAuth(null);
+    }
+
+    window.addEventListener(INVALID_AUTH_EVENT, handleInvalidAuth);
+    return () => {
+      window.removeEventListener(INVALID_AUTH_EVENT, handleInvalidAuth);
+    };
   }, []);
 
   if (!auth) {

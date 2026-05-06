@@ -13,9 +13,15 @@ function resolveApiUrl() {
 }
 
 export const API_URL = resolveApiUrl();
+export const INVALID_AUTH_EVENT = "seringym:invalid-auth";
 
 function getToken() {
   return localStorage.getItem("gympro_token");
+}
+
+function clearStoredAuth() {
+  localStorage.removeItem("gympro_token");
+  localStorage.removeItem("gympro_user");
 }
 
 function wait(ms: number) {
@@ -53,6 +59,12 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}) {
       }
 
       if (!response.ok) {
+        if (response.status === 401) {
+          clearStoredAuth();
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event(INVALID_AUTH_EVENT));
+          }
+        }
         throw new Error(payload.message ?? "Bir hata oluştu.");
       }
 
