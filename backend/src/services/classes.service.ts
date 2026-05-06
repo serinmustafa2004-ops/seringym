@@ -3,7 +3,7 @@ import { query } from "../config/db.js";
 type UserRole = "member" | "trainer" | "admin";
 
 export async function listClasses(userId: string, role: UserRole) {
-  const result = await query(
+  const classResult = await query(
     `
       SELECT
         c.id,
@@ -24,9 +24,16 @@ export async function listClasses(userId: string, role: UserRole) {
       JOIN users u ON u.id = t.user_id
       LEFT JOIN class_bookings cb ON cb.class_id = c.id AND cb.status = 'booked'
       GROUP BY c.id, u.full_name
+    `,
+    [userId]
+  );
 
-      UNION ALL
+  if (role !== "member") {
+    return classResult.rows;
+  }
 
+  const personalLessonResult = await query(
+    `
       SELECT
         ('payment-' || p.id)::text AS id,
         'Özel Ders Paketi' AS name,
@@ -36,8 +43,8 @@ export async function listClasses(userId: string, role: UserRole) {
           trainer_user.full_name || ' ile satın alınan özel ders paketi'
         ) AS description,
         COALESCE(p.session_count, 1) AS capacity,
-        p.paid_at AS starts_at,
-        p.paid_at AS ends_at,
+        p.paid_at::text AS starts_at,
+        p.paid_at::text AS ends_at,
         'Randevu Planlaması' AS room_name,
         trainer_user.full_name AS trainer_name,
         0::int AS reserved_count,
@@ -48,17 +55,19 @@ export async function listClasses(userId: string, role: UserRole) {
       JOIN trainers t ON t.id = p.trainer_id
       JOIN users trainer_user ON trainer_user.id = t.user_id
       WHERE
-        $2 = 'member'
-        AND p.user_id = $1
+        p.user_id = $1
         AND p.payment_category = 'personal_training'
         AND p.payment_status = 'paid'
-
-      ORDER BY starts_at ASC
+      ORDER BY p.paid_at DESC
     `,
-    [userId, role]
+    [userId]
   );
 
-  return result.rows;
+  return [...classResult.rows, ...personalLessonResult.rows].sort((left, right) => {
+    const leftTime = new Date(left.starts_at).getTime();
+    const rightTime = new Date(right.starts_at).getTime();
+    return leftTime - rightTime;
+  });
 }
 
 export async function bookClass(memberId: string, classId: string) {
