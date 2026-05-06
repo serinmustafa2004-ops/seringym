@@ -99,9 +99,24 @@ export async function getProgramsOverview(userId: string, role: "member" | "trai
         )
       : { rows: [] as any[] };
 
+  const memberNameCounts = new Map<string, number>();
+  for (const member of membersResult.rows) {
+    memberNameCounts.set(member.full_name, (memberNameCounts.get(member.full_name) ?? 0) + 1);
+  }
+
+  const assignableMembers = membersResult.rows.map((member) => {
+    const hasDuplicateName = (memberNameCounts.get(member.full_name) ?? 0) > 1;
+    const suffix = member.username ?? member.email.split("@")[0];
+
+    return {
+      ...member,
+      display_name: hasDuplicateName ? `${member.full_name} • ${suffix}` : member.full_name
+    };
+  });
+
   return {
     role,
-    assignableMembers: membersResult.rows,
+    assignableMembers,
     programs: programsResult.rows.map((program: any) => ({
       ...program,
       days: daysResult.rows.filter((day: any) => day.program_id === program.id)

@@ -142,6 +142,7 @@ export type ProgramOverview = {
     full_name: string;
     username: string | null;
     email: string;
+    display_name: string;
   }>;
   programs: Array<{
     id: string;

@@ -105,7 +105,7 @@ export function ProgramsPanel({ data, user, onRefresh }: Props) {
               <select value={memberId} onChange={(event) => setMemberId(event.target.value)}>
                 {data.assignableMembers.map((member) => (
                   <option key={member.id} value={member.id}>
-                    {member.full_name} {member.username ? `• ${member.username}` : `• ${member.email}`}
+                    {member.display_name}
                   </option>
                 ))}
               </select>
