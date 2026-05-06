@@ -346,6 +346,31 @@ export function DashboardPage({ user, onLogout }: Props) {
                     </ul>
                   </div>
                 ))}
+
+                {user.role === "member" ? (
+                  <div className="overview-showcase-block">
+                    <section className="showcase-grid showcase-grid--overview">
+                      <article className="showcase-card">
+                        <img
+                          src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80"
+                          alt="SerinGym serbest ağırlık alanı"
+                        />
+                      </article>
+                      <article className="showcase-card showcase-card--accent">
+                        <img
+                          src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1200&q=80"
+                          alt="SerinGym kişisel antrenman alanı"
+                        />
+                      </article>
+                      <article className="showcase-card showcase-card--small">
+                        <img
+                          src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80"
+                          alt="SerinGym grup ders alanı"
+                        />
+                      </article>
+                    </section>
+                  </div>
+                ) : null}
               </div>
 
               <div className={`overview-side-stack overview-side-stack--${user.role}`}>
@@ -361,28 +386,6 @@ export function DashboardPage({ user, onLogout }: Props) {
               </div>
             </section>
 
-            {user.role === "member" ? (
-              <section className="showcase-grid">
-                <article className="showcase-card">
-                  <img
-                    src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80"
-                    alt="SerinGym serbest ağırlık alanı"
-                  />
-                </article>
-                <article className="showcase-card showcase-card--accent">
-                  <img
-                    src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1200&q=80"
-                    alt="SerinGym kişisel antrenman alanı"
-                  />
-                </article>
-                <article className="showcase-card showcase-card--small">
-                  <img
-                    src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=1200&q=80"
-                    alt="SerinGym grup ders alanı"
-                  />
-                </article>
-              </section>
-            ) : null}
           </>
         );
       case "payments":
