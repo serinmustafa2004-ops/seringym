@@ -355,12 +355,11 @@ export function DashboardPage({ user, onLogout }: Props) {
                   femaleCount={Number(loadedSummary.roleStats.femaleCount ?? 0)}
                   maleCount={Number(loadedSummary.roleStats.maleCount ?? 0)}
                 />
+                {(user.role === "member" || user.role === "admin") ? (
+                  <EntryPassPanel user={user} />
+                ) : null}
               </div>
             </section>
-
-            {(user.role === "member" || user.role === "admin") ? (
-              <EntryPassPanel user={user} />
-            ) : null}
 
             {user.role === "member" ? (
               <section className="showcase-grid">
