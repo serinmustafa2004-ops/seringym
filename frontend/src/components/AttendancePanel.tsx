@@ -9,8 +9,6 @@ function maxValue(items: Array<{ total: string }>) {
 
 export function AttendancePanel() {
   const [date, setDate] = useState("");
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
   const [member, setMember] = useState("");
   const [data, setData] = useState<AttendanceOverview | null>(null);
   const [error, setError] = useState("");
@@ -19,17 +17,8 @@ export function AttendancePanel() {
   async function load() {
     try {
       setError("");
-
-      if (from && to && from > to) {
-        setError("Başlangıç tarihi, bitiş tarihinden sonra olamaz.");
-        setData(null);
-        return;
-      }
-
       const params = new URLSearchParams();
       if (date) params.set("date", date);
-      if (from) params.set("from", from);
-      if (to) params.set("to", to);
       if (member) params.set("member", member);
       const suffix = params.toString() ? `?${params.toString()}` : "";
       const result = await apiRequest<AttendanceOverview>(`/attendance${suffix}`);
@@ -45,8 +34,6 @@ export function AttendancePanel() {
 
   function clearFilters() {
     setDate("");
-    setFrom("");
-    setTo("");
     setMember("");
     setError("");
     void apiRequest<AttendanceOverview>("/attendance")
@@ -73,48 +60,9 @@ export function AttendancePanel() {
         <div className="program-form-grid">
           <label>
             Gün
-            <input
-              type="date"
-              value={date}
-              onChange={(event) => {
-                const nextDate = event.target.value;
-                setDate(nextDate);
-                if (nextDate) {
-                  setFrom("");
-                  setTo("");
-                }
-              }}
-            />
+            <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
           </label>
-          <label>
-            Başlangıç Tarihi
-            <input
-              type="date"
-              value={from}
-              onChange={(event) => {
-                const nextFrom = event.target.value;
-                setFrom(nextFrom);
-                if (nextFrom) {
-                  setDate("");
-                }
-              }}
-            />
-          </label>
-          <label>
-            Bitiş Tarihi
-            <input
-              type="date"
-              value={to}
-              onChange={(event) => {
-                const nextTo = event.target.value;
-                setTo(nextTo);
-                if (nextTo) {
-                  setDate("");
-                }
-              }}
-            />
-          </label>
-          <label>
+          <label className="span-3">
             Üye Ara
             <input
               value={member}
