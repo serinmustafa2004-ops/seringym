@@ -18,6 +18,10 @@ function getToken() {
   return localStorage.getItem("gympro_token");
 }
 
+function wait(ms: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
 export function getAuthHeaders(additional: HeadersInit = {}) {
   const headers = new Headers(additional);
   const token = getToken();
@@ -30,24 +34,36 @@ export function getAuthHeaders(additional: HeadersInit = {}) {
 export async function apiRequest<T>(path: string, options: RequestInit = {}) {
   const headers = getAuthHeaders(options.headers);
   headers.set("Content-Type", "application/json");
+  let lastError: Error | null = null;
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers
-  });
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const response = await fetch(`${API_URL}${path}`, {
+        ...options,
+        headers
+      });
 
-  const rawText = await response.text();
-  let payload: { message?: string } = {};
+      const rawText = await response.text();
+      let payload: { message?: string } = {};
 
-  try {
-    payload = rawText ? JSON.parse(rawText) : {};
-  } catch {
-    payload = {};
+      try {
+        payload = rawText ? JSON.parse(rawText) : {};
+      } catch {
+        payload = {};
+      }
+
+      if (!response.ok) {
+        throw new Error(payload.message ?? "Bir hata oluştu.");
+      }
+
+      return payload as T;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error("Bir hata oluştu.");
+      if (attempt < 2) {
+        await wait(1200 * (attempt + 1));
+      }
+    }
   }
 
-  if (!response.ok) {
-    throw new Error(payload.message ?? "Bir hata oluştu.");
-  }
-
-  return payload as T;
+  throw lastError ?? new Error("Bir hata oluştu.");
 }
