@@ -688,6 +688,26 @@ label {
   align-items: start;
 }
 
+.overview-grid--member {
+  display: block;
+}
+
+.member-overview-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  align-items: stretch;
+}
+
+.member-overview-layout > .dashboard-card,
+.member-overview-layout > .salon-status-card {
+  min-height: 100%;
+}
+
+.member-entry-span {
+  grid-column: 1 / -1;
+}
+
 .overview-side-stack {
   display: grid;
   gap: 0.45rem;
@@ -1496,6 +1516,7 @@ td {
 
 .overview-grid--member .entry-pass-card {
   padding: 0.95rem;
+  min-height: 0;
 }
 
 .overview-grid--member .entry-pass-card .panel-heading {
