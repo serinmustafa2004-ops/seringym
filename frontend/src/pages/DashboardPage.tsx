@@ -335,7 +335,7 @@ export function DashboardPage({ user, onLogout }: Props) {
             </section>
 
             <section className={`overview-grid overview-grid--${user.role}`}>
-              <div className={user.role === "member" ? "member-overview-layout" : `dashboard-grid dashboard-grid--${user.role}`}>
+              <div className={`overview-layout overview-layout--${user.role}`}>
                 {overviewCards.map((card) => (
                   <div className="dashboard-card" key={card.title}>
                     <SectionTitle>{card.title}</SectionTitle>
@@ -347,34 +347,19 @@ export function DashboardPage({ user, onLogout }: Props) {
                   </div>
                 ))}
 
-                {user.role === "member" ? (
-                  <>
-                    <SalonStatusCard
-                      occupancyRate={Number(loadedSummary.roleStats.occupancyRate ?? 0)}
-                      activePeople={Number(loadedSummary.roleStats.activePeople ?? 0)}
-                      femaleCount={Number(loadedSummary.roleStats.femaleCount ?? 0)}
-                      maleCount={Number(loadedSummary.roleStats.maleCount ?? 0)}
-                    />
-                    <div className="member-entry-span">
-                      <EntryPassPanel user={user} />
-                    </div>
-                  </>
+                <SalonStatusCard
+                  occupancyRate={Number(loadedSummary.roleStats.occupancyRate ?? 0)}
+                  activePeople={Number(loadedSummary.roleStats.activePeople ?? 0)}
+                  femaleCount={Number(loadedSummary.roleStats.femaleCount ?? 0)}
+                  maleCount={Number(loadedSummary.roleStats.maleCount ?? 0)}
+                />
+
+                {user.role === "member" || user.role === "admin" ? (
+                  <div className="overview-entry-span">
+                    <EntryPassPanel user={user} />
+                  </div>
                 ) : null}
               </div>
-
-              {user.role !== "member" ? (
-                <div className={`overview-side-stack overview-side-stack--${user.role}`}>
-                  <SalonStatusCard
-                    occupancyRate={Number(loadedSummary.roleStats.occupancyRate ?? 0)}
-                    activePeople={Number(loadedSummary.roleStats.activePeople ?? 0)}
-                    femaleCount={Number(loadedSummary.roleStats.femaleCount ?? 0)}
-                    maleCount={Number(loadedSummary.roleStats.maleCount ?? 0)}
-                  />
-                  {user.role === "admin" ? (
-                    <EntryPassPanel user={user} />
-                  ) : null}
-                </div>
-              ) : null}
             </section>
 
             {user.role === "member" ? (

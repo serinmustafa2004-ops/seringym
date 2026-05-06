@@ -682,37 +682,23 @@ label {
 }
 
 .overview-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
-  gap: 0.7rem;
-  align-items: start;
-}
-
-.overview-grid--member {
   display: block;
 }
 
-.member-overview-layout {
+.overview-layout {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.7rem;
   align-items: stretch;
 }
 
-.member-overview-layout > .dashboard-card,
-.member-overview-layout > .salon-status-card {
+.overview-layout > .dashboard-card,
+.overview-layout > .salon-status-card {
   min-height: 100%;
 }
 
-.member-entry-span {
+.overview-entry-span {
   grid-column: 1 / -1;
-}
-
-.overview-side-stack {
-  display: grid;
-  gap: 0.45rem;
-  align-content: start;
-  align-self: start;
 }
 
 .overview-grid--member .dashboard-grid,
@@ -731,8 +717,7 @@ label {
   align-items: start;
 }
 
-.dashboard-grid > *,
-.overview-side-stack > * {
+.dashboard-grid > * {
   align-self: start;
   height: fit-content;
 }
@@ -1510,29 +1495,25 @@ td {
   grid-column: 1 / -1;
 }
 
-.overview-grid--member .overview-side-stack > .panel-stack {
-  gap: 0;
-}
-
-.overview-grid--member .entry-pass-card {
+.overview-entry-span .entry-pass-card {
   padding: 0.95rem;
   min-height: 0;
 }
 
-.overview-grid--member .entry-pass-card .panel-heading {
+.overview-entry-span .entry-pass-card .panel-heading {
   margin-bottom: 0.25rem;
 }
 
-.overview-grid--member .entry-pass-card .panel-heading p {
+.overview-entry-span .entry-pass-card .panel-heading p {
   margin-top: 0.2rem;
   font-size: 0.9rem;
 }
 
-.overview-grid--member .entry-pass-card .ghost-button {
+.overview-entry-span .entry-pass-card .ghost-button {
   padding: 0.7rem 0.85rem;
 }
 
-.overview-grid--member .entry-token-box {
+.overview-entry-span .entry-token-box {
   font-size: 0.86rem;
 }
 
