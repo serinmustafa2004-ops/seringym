@@ -14,7 +14,7 @@ const daySchema = z.object({
 });
 
 const createProgramSchema = z.object({
-  memberId: z.string().uuid(),
+  memberIdentifier: z.string().min(2).max(160),
   title: z.string().min(3).max(140),
   goalSummary: z.string().min(5).max(400),
   notes: z.string().max(500).optional().or(z.literal("")),

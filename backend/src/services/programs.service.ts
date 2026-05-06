@@ -2,7 +2,7 @@ import { getClient, query } from "../config/db.js";
 import { topluBildirimOlustur } from "./notifications.service.js";
 
 type CreateProgramInput = {
-  memberId: string;
+  memberIdentifier: string;
   title: string;
   goalSummary: string;
   notes?: string;
@@ -129,6 +129,28 @@ export async function createWorkoutProgram(
   role: "member" | "trainer" | "admin",
   payload: CreateProgramInput
 ) {
+  const memberLookup = payload.memberIdentifier.trim();
+  const memberResult = await query<{ id: string }>(
+    `
+      SELECT id
+      FROM users
+      WHERE role = 'member'
+        AND (
+          full_name ILIKE $1
+          OR username ILIKE $1
+          OR email ILIKE $1
+        )
+      ORDER BY created_at ASC
+      LIMIT 1
+    `,
+    [memberLookup]
+  );
+
+  const memberId = memberResult.rows[0]?.id;
+  if (!memberId) {
+    throw new Error("Yazılan üyeyi sistemde bulamadım.");
+  }
+
   const trainerResult =
     role === "trainer"
       ? await query<{ trainer_id: string }>(
@@ -155,7 +177,7 @@ export async function createWorkoutProgram(
         VALUES ($1, $2, $3, $4, $5, 'active')
         RETURNING id
       `,
-      [trainerId, payload.memberId, payload.title, payload.goalSummary, payload.notes ?? null]
+      [trainerId, memberId, payload.title, payload.goalSummary, payload.notes ?? null]
     );
 
     const programId = programInsert.rows[0].id;
@@ -194,7 +216,7 @@ export async function createWorkoutProgram(
     const adminIds = await query<{ id: string }>(`SELECT id FROM users WHERE role = 'admin'`);
     const trainerUserIds = await query<{ user_id: string }>(`SELECT user_id FROM trainers WHERE id = $1`, [trainerId]);
     await topluBildirimOlustur(
-      [payload.memberId, trainerUserIds.rows[0]?.user_id ?? "", ...adminIds.rows.map((item) => item.id)],
+      [memberId, trainerUserIds.rows[0]?.user_id ?? "", ...adminIds.rows.map((item) => item.id)],
       "Yeni Program Atandı",
       `${payload.title} programı sisteme eklendi.`,
       "program"

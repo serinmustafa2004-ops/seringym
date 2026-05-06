@@ -38,7 +38,7 @@ function durumEtiketi(status: string) {
 
 export function ProgramsPanel({ data, user, onRefresh }: Props) {
   const canCreate = user.role === "trainer" || user.role === "admin";
-  const [memberId, setMemberId] = useState(data.assignableMembers[0]?.id ?? "");
+  const [memberIdentifier, setMemberIdentifier] = useState("");
   const [title, setTitle] = useState("");
   const [goalSummary, setGoalSummary] = useState("");
   const [notes, setNotes] = useState("");
@@ -58,8 +58,9 @@ export function ProgramsPanel({ data, user, onRefresh }: Props) {
       setMessage("");
       await apiRequest("/programs", {
         method: "POST",
-        body: JSON.stringify({ memberId, title, goalSummary, notes, days })
+        body: JSON.stringify({ memberIdentifier, title, goalSummary, notes, days })
       });
+      setMemberIdentifier("");
       setTitle("");
       setGoalSummary("");
       setNotes("");
@@ -101,14 +102,12 @@ export function ProgramsPanel({ data, user, onRefresh }: Props) {
 
           <div className="program-form-grid">
             <label className="span-2">
-              Üye
-              <select value={memberId} onChange={(event) => setMemberId(event.target.value)}>
-                {data.assignableMembers.map((member) => (
-                  <option key={member.id} value={member.id}>
-                    {member.display_name}
-                  </option>
-                ))}
-              </select>
+              Üye Adı veya Kullanıcı Adı
+              <input
+                value={memberIdentifier}
+                onChange={(event) => setMemberIdentifier(event.target.value)}
+                placeholder="Örnek: Ece Kaya veya uye001"
+              />
             </label>
             <label>
               Program Başlığı
@@ -188,7 +187,7 @@ export function ProgramsPanel({ data, user, onRefresh }: Props) {
             </button>
             <button
               type="button"
-              disabled={!memberId || !title || !goalSummary || days.some((day) => !day.focusArea || !day.exerciseName) || saving}
+              disabled={!memberIdentifier || !title || !goalSummary || days.some((day) => !day.focusArea || !day.exerciseName) || saving}
               onClick={createProgram}
             >
               {saving ? "Kaydediliyor..." : "Programı Kaydet"}
