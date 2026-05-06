@@ -36,7 +36,6 @@ export function SecurityPanel({ user }: Props) {
         <div className="panel-heading">
           <div>
             <h3>Şifre ve Güvenlik</h3>
-            <p>{user.fullName} hesabı için şifre değişikliği ve temel güvenlik bilgileri burada yer alır.</p>
           </div>
         </div>
         <div className="program-form-grid">
@@ -55,16 +54,6 @@ export function SecurityPanel({ user }: Props) {
           </button>
         </div>
         {message ? <p className="helper-text">{message}</p> : null}
-      </div>
-
-      <div className="table-card">
-        <h3>Güvenlik Notları</h3>
-        <div className="plain-info-list">
-          <span>Şifreler veritabanında düz metin yerine güvenli karma yöntemiyle saklanır.</span>
-          <span>Her istek oturum belirteci ile korunur ve yetki dışı erişimler engellenir.</span>
-          <span>Yönetici hesapları için güçlü, benzersiz ve uzun şifre kullanılması önerilir.</span>
-          <span>Sunum veya teslim sırasında `.env` dosyaları ve gizli anahtarlar paylaşılmamalıdır.</span>
-        </div>
       </div>
     </section>
   );
