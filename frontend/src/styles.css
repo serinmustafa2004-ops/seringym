@@ -1171,16 +1171,30 @@ label {
 .program-status {
   background: rgba(199, 155, 74, 0.1);
   border-radius: 999px;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.9rem;
+  padding: 0.3rem 0.68rem;
+  font-size: 0.84rem;
+  border: 1px solid rgba(199, 155, 74, 0.18);
 }
 
 .chip-row,
 .certificate-list,
 .program-meta {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-wrap: wrap;
+}
+
+.chip {
+  background: rgba(75, 143, 140, 0.12);
+  border-color: rgba(75, 143, 140, 0.2);
+  color: #caefeb;
+  font-weight: 600;
+}
+
+.certificate-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
 }
 
 .review-box,
@@ -1361,21 +1375,22 @@ td {
 
 .salon-status-card {
   display: grid;
-  gap: 1rem;
+  gap: 0.8rem;
   min-height: 100%;
+  padding: 1rem;
 }
 
 .salon-graphics {
   display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 1rem;
+  grid-template-columns: 138px 1fr;
+  gap: 0.8rem;
   align-items: center;
 }
 
 .occupancy-ring {
   --occupancy: 0%;
-  width: 160px;
-  height: 160px;
+  width: 124px;
+  height: 124px;
   margin: 0 auto;
   border-radius: 50%;
   background:
@@ -1475,21 +1490,22 @@ td {
 }
 
 .occupancy-ring strong {
-  font-size: 2rem;
+  font-size: 1.55rem;
   color: var(--text-strong);
 }
 
 .occupancy-ring span {
   color: var(--muted);
+  font-size: 0.82rem;
 }
 
 .gender-split-card {
   display: grid;
-  gap: 0.8rem;
+  gap: 0.55rem;
 }
 
 .gender-split-bar {
-  height: 22px;
+  height: 16px;
   border-radius: 999px;
   overflow: hidden;
   display: flex;
@@ -1507,19 +1523,20 @@ td {
 .gender-legend {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.65rem;
   color: var(--muted);
+  font-size: 0.84rem;
 }
 
 .salon-status-stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
+  gap: 0.6rem;
 }
 
 .salon-status-item {
-  padding: 0.9rem 1rem;
-  border-radius: 18px;
+  padding: 0.75rem 0.85rem;
+  border-radius: 16px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--line);
   display: grid;
@@ -1528,11 +1545,29 @@ td {
 
 .salon-status-item strong {
   color: var(--text-strong);
-  font-size: 1.4rem;
+  font-size: 1.12rem;
 }
 
 .salon-status-item span {
   color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.salon-status-card .section-title {
+  margin-bottom: 0;
+  font-size: 1.15rem;
+}
+
+.salon-status-card .card-title-row span {
+  font-size: 0.9rem;
+}
+
+.trainer-card {
+  gap: 0.9rem;
+}
+
+.trainer-card .chip-row {
+  margin-top: -0.1rem;
 }
 
 .showcase-card {
