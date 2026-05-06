@@ -66,11 +66,39 @@ const members = [
   }
 ];
 
+const usedMemberNames = new Set(members.map((member) => member.name));
+
+function uniqueMemberName(index) {
+  if (index < memberNames1to49.length) {
+    const directName = memberNames1to49[index];
+    usedMemberNames.add(directName);
+    return directName;
+  }
+
+  let attempt = index;
+  while (attempt < firstNames.length * lastNames.length + index + 20) {
+    const first = firstNames[attempt % firstNames.length];
+    const last = lastNames[Math.floor(attempt / firstNames.length) % lastNames.length];
+    const candidate = `${first} ${last}`;
+
+    if (!usedMemberNames.has(candidate)) {
+      usedMemberNames.add(candidate);
+      return candidate;
+    }
+
+    attempt += 1;
+  }
+
+  const fallback = `Üye ${String(index + 1).padStart(3, "0")}`;
+  usedMemberNames.add(fallback);
+  return fallback;
+}
+
 for (let i = 1; i <= 49; i += 1) {
   const no = String(i + 1).padStart(3, "0");
   members.push({
     id: `90000000-0000-0000-0000-${String(i).padStart(12, "0")}`,
-    name: memberNames1to49[i - 1],
+    name: uniqueMemberName(i - 1),
     email: `uye${i}@seringym.local`,
     username: `uye${no}`,
     password: `SerinUye${no}!`,
@@ -79,11 +107,10 @@ for (let i = 1; i <= 49; i += 1) {
 }
 
 for (let gs = 50; gs <= 249; gs += 1) {
-  const idx = (gs - 50) % 40;
   const no = String(gs + 1).padStart(3, "0");
   members.push({
     id: `93000000-0000-0000-0000-${String(gs).padStart(12, "0")}`,
-    name: `${firstNames[idx]} ${lastNames[idx]}`,
+    name: uniqueMemberName(gs - 1),
     email: `uye${gs}@seringym.local`,
     username: `uye${no}`,
     password: `SerinUye${no}!`,
@@ -99,12 +126,19 @@ const sqlLines = [
   ""
 ];
 
+const renameLines = [];
+
 for (const account of accounts) {
   const hash = bcrypt.hashSync(account.password, 10);
   const escapedUsername = account.username.replace(/'/g, "''");
   sqlLines.push(
     `UPDATE users SET username = '${escapedUsername}', password_hash = '${hash}' WHERE id = '${account.id}';`
   );
+
+  if (account.role === "Üye") {
+    const escapedName = account.name.replace(/'/g, "''");
+    renameLines.push(`UPDATE users SET full_name = '${escapedName}' WHERE id = '${account.id}';`);
+  }
 }
 
 const markdown = [
@@ -131,6 +165,7 @@ appendSection("Antrenörler", trainers);
 appendSection("Üyeler", members);
 
 fs.writeFileSync(path.join(root, "database", "migration_v11.sql"), sqlLines.join("\n") + "\n");
+fs.writeFileSync(path.join(root, "database", "migration_v14.sql"), renameLines.join("\n") + "\n");
 fs.writeFileSync(path.join(root, "kullanıcı adları ve şifreler.md"), markdown.join("\n"));
 
 console.log(`Hazırlandı: ${accounts.length} hesap`);
