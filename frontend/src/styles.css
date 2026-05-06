@@ -49,9 +49,16 @@ button {
   border-radius: 16px;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
   color: #1a222a;
-  padding: 0.9rem 1.2rem;
+  min-height: 46px;
+  padding: 0.8rem 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
   transition: transform 140ms ease, opacity 140ms ease;
   font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
 }
 
 button:hover {
@@ -387,8 +394,10 @@ label {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  min-height: 46px;
   padding: 0.8rem 0.95rem;
   white-space: nowrap;
+  justify-content: flex-start;
 }
 
 .menu-button .icon-badge {
@@ -488,10 +497,12 @@ label {
 .notification-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.6rem;
   background: rgba(247, 198, 0, 0.08);
   color: var(--text);
   border: 1px solid var(--line);
+  min-height: 46px;
   padding: 0.8rem 1rem;
 }
 
@@ -559,6 +570,7 @@ label {
   align-items: center;
   justify-content: space-between;
   text-align: left;
+  min-height: 46px;
   padding: 0.8rem 1rem;
 }
 
