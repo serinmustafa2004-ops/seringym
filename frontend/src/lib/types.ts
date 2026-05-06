@@ -251,4 +251,6 @@ export type GymClass = {
   trainer_name: string;
   reserved_count: number;
   is_booked: boolean;
+  class_kind?: "group_class" | "special_lesson";
+  session_count?: number | null;
 };

@@ -1,6 +1,8 @@
 import { query } from "../config/db.js";
 
-export async function listClasses(memberId: string) {
+type UserRole = "member" | "trainer" | "admin";
+
+export async function listClasses(userId: string, role: UserRole) {
   const result = await query(
     `
       SELECT
@@ -14,15 +16,46 @@ export async function listClasses(memberId: string) {
         c.room_name,
         u.full_name AS trainer_name,
         COUNT(cb.id)::int AS reserved_count,
-        BOOL_OR(cb.member_id = $1 AND cb.status = 'booked') AS is_booked
+        BOOL_OR(cb.member_id = $1 AND cb.status = 'booked') AS is_booked,
+        'group_class'::text AS class_kind,
+        NULL::int AS session_count
       FROM classes c
       JOIN trainers t ON t.id = c.trainer_id
       JOIN users u ON u.id = t.user_id
       LEFT JOIN class_bookings cb ON cb.class_id = c.id AND cb.status = 'booked'
       GROUP BY c.id, u.full_name
-      ORDER BY c.starts_at ASC
+
+      UNION ALL
+
+      SELECT
+        ('payment-' || p.id)::text AS id,
+        'Özel Ders Paketi' AS name,
+        'Birebir Çalışma' AS category,
+        COALESCE(
+          p.description,
+          trainer_user.full_name || ' ile satın alınan özel ders paketi'
+        ) AS description,
+        COALESCE(p.session_count, 1) AS capacity,
+        p.paid_at AS starts_at,
+        p.paid_at AS ends_at,
+        'Randevu Planlaması' AS room_name,
+        trainer_user.full_name AS trainer_name,
+        0::int AS reserved_count,
+        TRUE AS is_booked,
+        'special_lesson'::text AS class_kind,
+        p.session_count
+      FROM payments p
+      JOIN trainers t ON t.id = p.trainer_id
+      JOIN users trainer_user ON trainer_user.id = t.user_id
+      WHERE
+        $2 = 'member'
+        AND p.user_id = $1
+        AND p.payment_category = 'personal_training'
+        AND p.payment_status = 'paid'
+
+      ORDER BY starts_at ASC
     `,
-    [memberId]
+    [userId, role]
   );
 
   return result.rows;

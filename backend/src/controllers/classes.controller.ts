@@ -4,7 +4,7 @@ import { bookClass, listClasses } from "../services/classes.service.js";
 
 export async function getClasses(req: Request, res: Response) {
   try {
-    const classes = await listClasses(req.user!.sub);
+    const classes = await listClasses(req.user!.sub, req.user!.role);
     return res.json(classes);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Beklenmeyen hata";

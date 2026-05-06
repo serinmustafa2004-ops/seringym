@@ -12,6 +12,7 @@ type Props = {
 
 export function ClassCard({ item, onRefresh, canBook = true }: Props) {
   const [showDetails, setShowDetails] = useState(false);
+  const isSpecialLesson = item.class_kind === "special_lesson";
 
   async function reserve() {
     try {
@@ -30,35 +31,39 @@ export function ClassCard({ item, onRefresh, canBook = true }: Props) {
       <div className="class-card__header">
         <div>
           <div className="card-title-row">
-            <IconBadge symbol="●" tone="gold" size="sm" />
+            <IconBadge symbol={isSpecialLesson ? "◆" : "●"} tone={isSpecialLesson ? "teal" : "gold"} size="sm" />
             <h3>{cevirMetin(item.name)}</h3>
           </div>
           <p>
             {cevirMetin(item.category)} · {item.trainer_name}
           </p>
         </div>
-        <span>
-          {item.reserved_count}/{item.capacity}
-        </span>
+        <span>{isSpecialLesson ? `${item.session_count ?? item.capacity} Seans` : `${item.reserved_count}/${item.capacity}`}</span>
       </div>
       <p>{cevirMetin(item.description)}</p>
       <small>
-        {new Date(item.starts_at).toLocaleString("tr-TR")} · {cevirMetin(item.room_name)}
+        {isSpecialLesson
+          ? `Satın alma: ${new Date(item.starts_at).toLocaleString("tr-TR")} · ${cevirMetin(item.room_name)}`
+          : `${new Date(item.starts_at).toLocaleString("tr-TR")} · ${cevirMetin(item.room_name)}`}
       </small>
       {showDetails ? (
         <div className="class-detail-box">
           <span>Eğitmen: {item.trainer_name}</span>
           <span>Kategori: {cevirMetin(item.category)}</span>
-          <span>Kontenjan: {item.reserved_count}/{item.capacity}</span>
+          <span>
+            {isSpecialLesson
+              ? `Satın alınan seans: ${item.session_count ?? item.capacity}`
+              : `Kontenjan: ${item.reserved_count}/${item.capacity}`}
+          </span>
         </div>
       ) : null}
-      {canBook ? (
+      {canBook && !isSpecialLesson ? (
         <button disabled={item.is_booked} onClick={reserve}>
           {item.is_booked ? "Rezervasyon Yapıldı" : "Yerini Ayırt"}
         </button>
       ) : (
         <button className="ghost-button" onClick={() => setShowDetails((current) => !current)}>
-          {showDetails ? "Detayı Gizle" : "Detayları Gör"}
+          {showDetails ? "Detayı Gizle" : isSpecialLesson ? "Paket Bilgisini Gör" : "Detayları Gör"}
         </button>
       )}
     </article>
