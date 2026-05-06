@@ -328,14 +328,14 @@ export function DashboardPage({ user, onLogout }: Props) {
       case "overview":
         return (
           <>
-            <section className="stats-grid">
+            <section className={`stats-grid stats-grid--${user.role}`}>
               {overviewStats.map((item) => (
                 <StatCard key={item.label} label={item.label} value={item.value} accent={item.accent} />
               ))}
             </section>
 
-            <section className="overview-grid">
-              <div className="dashboard-grid">
+            <section className={`overview-grid overview-grid--${user.role}`}>
+              <div className={`dashboard-grid dashboard-grid--${user.role}`}>
                 {overviewCards.map((card) => (
                   <div className="dashboard-card" key={card.title}>
                     <SectionTitle>{card.title}</SectionTitle>
@@ -348,7 +348,7 @@ export function DashboardPage({ user, onLogout }: Props) {
                 ))}
               </div>
 
-              <div className="overview-side-stack">
+              <div className={`overview-side-stack overview-side-stack--${user.role}`}>
                 <SalonStatusCard
                   occupancyRate={Number(loadedSummary.roleStats.occupancyRate ?? 0)}
                   activePeople={Number(loadedSummary.roleStats.activePeople ?? 0)}
