@@ -970,7 +970,7 @@ label {
   grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
   grid-template-areas:
     "wallet badges"
-    "wallet catalog";
+    "catalog catalog";
   align-items: start;
 }
 
@@ -984,7 +984,6 @@ label {
 
 .reward-section--catalog {
   grid-area: catalog;
-  justify-self: start;
   width: 100%;
 }
 
