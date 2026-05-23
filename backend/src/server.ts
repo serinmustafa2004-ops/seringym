@@ -3,8 +3,14 @@ import { env } from "./config/env.js";
 import { pool } from "./config/db.js";
 
 async function start() {
-  app.listen(Number(env.PORT), () => {
-    console.log(`API running on http://localhost:${env.PORT}`);
+  const port = Number(env.PORT);
+  const server = app.listen(port, () => {
+    console.log(`API running on http://localhost:${port}`);
+  });
+
+  server.on("error", (error) => {
+    console.error("HTTP sunucusu baslatilamadi:", error);
+    process.exit(1);
   });
 
   try {
@@ -15,4 +21,7 @@ async function start() {
   }
 }
 
-start();
+start().catch((error) => {
+  console.error("Sunucu acilisinda beklenmeyen hata:", error);
+  process.exit(1);
+});
