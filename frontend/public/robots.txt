@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://seringym.vercel.app/sitemap.xml

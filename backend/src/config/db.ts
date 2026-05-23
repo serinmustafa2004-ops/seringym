@@ -10,7 +10,9 @@ function createPoolConfig(connectionString: string) {
 
   return {
     connectionString,
-    ssl: isLocalConnection ? undefined : { rejectUnauthorized: false }
+    ssl: isLocalConnection ? undefined : { rejectUnauthorized: false },
+    connectionTimeoutMillis: isLocalConnection ? 5000 : 15000,
+    idleTimeoutMillis: 10000
   };
 }
 
